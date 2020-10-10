@@ -65,7 +65,6 @@ namespace WEB_PROYECTOS.Controllers
             var empleado = EmpleadoCN.ObtenerEmpleados(id);
 
             return View(empleado);
-
         }
 
 
@@ -117,6 +116,6 @@ namespace WEB_PROYECTOS.Controllers
                 return Json(new { ok = false, msg = "Ocurrio un error inesperado" }, JsonRequestBehavior.AllowGet);
 
             }
-        }
+        }//fin eliminar
     }
 }

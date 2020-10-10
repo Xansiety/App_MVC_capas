@@ -22,3 +22,43 @@ function dateValidate(dateIni, dateFin) {
         return true;
     }
 }
+
+//USO DE CALLBACK PARA PODER AHACER UNA PETICION ASYNCRONA
+function getDeptos(myCallback) {
+    $.ajax({
+        type: "GET",
+        url: '/Departamento/getDeptos',
+        dataType: 'json',
+        success: function (result) {
+            $.each(result.data, function (key, item) {
+                $("#DepartamentoId").append('<option value= ' + item.DepartamentoId + '>' + item.NombreDepartamento + '</option>');
+            });
+
+            return myCallback(result.data);
+        },
+        error: function (data) {
+            console.log(data);
+            alert('Errror inesperado');
+        }
+    });
+}
+
+
+//function getDeptos() {
+//    $.ajax({
+//        type: "GET",
+//        url: '/Departamento/getDeptos',
+//        dataType: 'json',
+//        success: function (result) {
+//            $.each(result.data, function (key, item) {
+//                $("#DepartamentoId").append('<option value= ' + item.DepartamentoId + '>' + item.NombreDepartamento + '</option>');
+//            });
+//        },
+//        error: function (data) {
+//            console.log(data);
+//            alert('Errror inesperado');
+//        }
+//    });
+//}
+
+

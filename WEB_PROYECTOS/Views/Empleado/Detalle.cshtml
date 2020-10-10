@@ -1,4 +1,4 @@
-﻿@model Entidad.Empleado
+﻿@model Entidad.EmpleadoVM
 
 @{
     ViewBag.Title = "Detalle";
@@ -11,19 +11,11 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.Nombres)
+           Nombre Completo
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Nombres)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Apellidos)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Apellidos)
+            @Model.NombreCompleto;
         </dd>
 
         <dt>
@@ -51,16 +43,16 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.DepartamentoId)
+           Departamento
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.DepartamentoId)
+           @Model.NombreDepartamento
         </dd>
 
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.EmpleadoId }) |
+    @Html.ActionLink("Editar Empleado", "Editar", new { id = Model.EmpleadoId }) |
     @Html.ActionLink("Back to List", "Index")
 </p>

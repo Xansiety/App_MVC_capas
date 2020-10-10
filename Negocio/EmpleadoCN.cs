@@ -25,7 +25,7 @@ namespace Negocio
         }
 
 
-        public static Empleado ObtenerEmpleados(int id)
+        public static EmpleadoVM ObtenerEmpleados(int id)
         {
 
             return obj.ObtenerEmpledos(id);

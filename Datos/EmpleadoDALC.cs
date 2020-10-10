@@ -34,7 +34,7 @@ namespace Datos
             }
         }
 
-        public Empleado ObtenerEmpledos(int id)
+        public EmpleadoVM ObtenerEmpledos(int id)
         {
 
             //using (var db = new ProyectosContext())
@@ -44,14 +44,17 @@ namespace Datos
 
             //}
             //QUERY CON PARAMETROS
-            string sql = @"select *  from empleado where EmpleadoId = @id";
+            string sql = @"select e.EmpleadoId, e.Nombres, e.Apellidos , e.Direccion, e.Email, e.Celular,e.DepartamentoId, d.NombreDepartamento
+                        from empleado e
+                        inner join Departamento d on e.DepartamentoId = d.DepartamentoId
+                         where  e.EmpleadoId = @EmpId  ";
 
             using (var db = new ProyectosContext())
             {
 
                 //  return db.Empleado.Find(id); //buscar Empleado por id
-                return db.Database.SqlQuery<Empleado>(sql,
-                    new SqlParameter("@id", id)).FirstOrDefault();
+                return db.Database.SqlQuery<EmpleadoVM>(sql,
+                    new SqlParameter("@EmpId", id)).FirstOrDefault();
 
             }
 
@@ -62,10 +65,13 @@ namespace Datos
         {
             using (var db = new ProyectosContext())
             {
-                //var p = db.Empleado.Find(empleado.ProyectoId);
-                //p.NombreProyecto = empleado.NombreProyecto;
-                //p.FechaInicio = empleado.FechaInicio;
-                //p.FechaFin = empleado.FechaFin;
+                var e = db.Empleado.Find(empleado.EmpleadoId);
+                e.Nombres = empleado.Nombres;
+                e.Apellidos = empleado.Apellidos;
+                e.Email = empleado.Email;
+                e.Direccion = empleado.Direccion;
+                e.Celular = empleado.Celular;
+                e.DepartamentoId = empleado.DepartamentoId;
 
                 db.SaveChanges();
             }
