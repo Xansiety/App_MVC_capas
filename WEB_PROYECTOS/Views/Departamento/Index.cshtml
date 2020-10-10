@@ -1,0 +1,58 @@
+﻿@model IEnumerable<Entidad.Departamento>
+
+@{
+    ViewBag.Title = "Listado de Departamentos";
+}
+
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Crear departamento", "Crear")
+</p>
+<table class="table" id="myTable">
+    <thead>
+        <tr>
+            <th>
+                @*@Html.DisplayNameFor(model => model.NombreDepartamento)*@
+                Nombre Departamentos
+            </th>
+            <th></th>
+        </tr>
+
+    </thead>
+
+    <tbody>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NombreDepartamento)
+                </td>
+                <td>
+                    @Html.ActionLink("Editar Registro", "Editar", new { id = item.DepartamentoId }) |
+                    @Html.ActionLink("Detalles Registro", "GetDepartamento", new { id = item.DepartamentoId }) |
+                    @Html.ActionLink("Borrar Registro", "Eliminar", new { id = item.DepartamentoId })
+                </td>
+            </tr>
+        }
+
+    </tbody>
+
+</table>
+
+
+@section scripts{
+
+
+    <script>
+        $(document).ready(function () {
+            $('#myTable').DataTable({
+                "pageLength": 5,
+                lengthMenu: [5, 10, 15, 20, 30, 50, 100]
+            });
+        });
+    </script>
+
+}

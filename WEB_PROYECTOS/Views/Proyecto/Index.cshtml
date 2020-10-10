@@ -1,0 +1,121 @@
+﻿@model IEnumerable<Entidad.Proyecto>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+@section estilos{
+    <link rel="stylesheet" href="//cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css" />
+}
+
+
+<h2>Lista de proyectos</h2>
+
+<p>
+    @*@Html.ActionLink("Crear nuevo proyecto", "Crear", new { }, new { @class = "btn btn-primary" })*@
+
+    @*<a class="btn btn-primary" href="/Proyecto/Crear">Crear Nuevo proyecto</a>*@
+    <a class="btn btn-primary" href="@Url.Action("Crear","Proyecto")">Crear Nuevo proyecto &nbsp;  <i class="glyphicon glyphicon-plus"></i> </a>
+</p>
+<table class="table" id="myTable">
+    <thead>
+        <tr>
+            <th>
+                <label>Nombre proyecto</label>
+            </th>
+            <th>
+                <label>Fecha Inicio</label>
+            </th>
+            <th>
+                <label>Fecha Fin</label>
+            </th>
+            <th></th>
+        </tr>
+
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NombreProyecto)
+                </td>
+                <td>
+                    @item.FechaInicio.ToShortDateString()
+                    @*@Html.DisplayFor(modelItem => item.FechaInicio.ToShortDateString())*@
+                </td>
+                <td>
+                    @item.FechaFin.ToShortDateString()
+                    @*@Html.DisplayFor(modelItem => item.FechaFin.ToShortDateString())*@
+                </td>
+                <td>
+                    <a class="btn btn-primary" title="Editar" href="@Url.Action("Editar","Proyecto", new { id = item.ProyectoId})">
+                        <i class="glyphicon glyphicon-edit"></i>
+                    </a>
+                    | <a class="btn btn-warning" title="Detalle" href="@Url.Action("Detalle","Proyecto" ,new { id = item.ProyectoId})">
+                        <i class="glyphicon glyphicon-list"></i>
+                    </a>
+                    | <a class="btn btn-danger" title="Eliminar" onclick="EliminarProyecto(@item.ProyectoId)">
+                        <i class="glyphicon glyphicon-trash"></i>
+                    </a>
+
+
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@section scripts{
+  
+    <script>
+        $(document).ready(function () {
+            $('#myTable').DataTable({
+                "pageLength": 5,
+                lengthMenu: [5,10,15,20,30,50,100]
+            });
+        });
+
+
+        function EliminarProyecto(idP) {
+            //alert(id);
+            $.confirm({
+                title: 'Elimar proyecto!',
+                content: 'estas seguro de elimar este proyecto?',
+                buttons: {
+                    confirmar: function () {
+                        //$.alert('Confirmed!');
+                        LoadingOverlayShow("#myTable"); //para invocar el loader
+                        $.ajax({
+                            url: "/Proyecto/Eliminar",
+                            type: "POST",
+                            data: { id: idP }
+                        }).done(function (response) { //se retorna simpre y cundo todo es correcto
+                            console.log(response);
+                            LoadingOverlayHide("#myTable"); //para invocar el loader
+                            if (response.ok == true) {
+                                alert("Procesos ejecutado correctamente");
+                                window.location = response.toRedirect; //redireccioname desde el mensaje pasdo
+                            } else {
+                                alert("Error" + response.msg)
+                            }
+                        }).fail(function (jqXHR, textStatus, errorThrown) {
+                            console.log("Cabezarea" + errorThrown);
+                            LoadingOverlayHide("#form"); //para invocar el loader
+                            //jqXHR CODIGO HTTP DE LA RESPUESTA FALLIDA TODOS LOS DAOS DE LA SOLICTUD AJAX RELIZDA
+                            //TEXTSTATUS // TEXTO QUE DESCRIBE EL TIPO DE ERROR QUE PUEDE SER ADEMAS DE NULL ABORT, TIMEOUT, NO TRANSPOR,
+                            //ERROR THOREN SI HAY UIN ERROR EN UN HTTP CONTIENE EL TEXTO DE LA CABCERA DEL ESTADO 404 POR JEMPLO
+
+                        });
+
+                    },
+                    cancelar: function () {
+                       // $.alert('Canceled!');
+                    }                    
+                }
+            });
+        }
+       
+    </script>
+
+}
+

@@ -1,0 +1,116 @@
+﻿@model Entidad.Proyecto
+
+@{
+    ViewBag.Title = "Editar";
+}
+
+<h2>Editar</h2>
+
+
+@*@using (Html.BeginForm())*@
+<form action="@Url.Action("Editar","Proyecto")" method="POST" name="form" id="form">
+
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>Editar Proyecto</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.ProyectoId)
+
+        <div class="form-group">
+            <label class="control-label col-md-2">Nombre del proyecto: </label>
+            <div class="col-md-10">
+                <input type="text" class="form-control" id="NombreProyecto" name="NombreProyecto" placeholder="Nombre" value="@Model.NombreProyecto" />
+
+                @Html.ValidationMessageFor(model => model.NombreProyecto, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">Fecha de inicio: </label>
+            <div class="col-md-10">
+                <input type="date" name="FechaInicio" id="FechaInicio" class="form-control"
+                       value="@Model.FechaInicio.ToString("yyyy-MM-dd")" />
+                @Html.ValidationMessageFor(model => model.FechaInicio, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">Fecha Fin: </label>
+            <div class="col-md-10">
+                <input type="date" name="FechaFin" id="FechaFin" class="form-control"
+                       value="@Model.FechaFin.ToString("yyyy-MM-dd")" />
+                @Html.ValidationMessageFor(model => model.FechaFin, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Guardar" class="btn btn-primary" />
+            </div>
+        </div>
+    </div>
+    </form>
+    @*}*@
+
+    <div>
+        @Html.ActionLink("Back to List", "Index")
+    </div>
+
+    @section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+<script>
+        //Enviar formulario via ajax
+        $("#form").submit(function (event) {
+            event.preventDefault(); //evitar que la pagina se recargue
+
+            var nombre = $("#NombreProyecto").val();
+            var fecha_inicio = $("#FechaInicio").val();
+            var fecha_fin = $("#FechaFin").val();
+
+            if ($.trim(nombre) == "") { //trim recorta los espacios en todos lados
+                alert("Ingresa nombre del proyecto")
+                return;
+            }
+            if (fecha_inicio == "" || fecha_fin == "") {
+                alert("Ingresar una fecha del proyecto")
+                return;
+            }
+
+            if (dateValidate(fecha_inicio, fecha_fin) == false) {
+                alert("La fecha fin no puede ser menor a la fecha de inicio");
+                return;
+            }
+
+            var post_url = $(this).attr("action"); //se consigue la url del formulario
+            var request_method = $(this).attr("method"); //se consigue el metodo
+            var form_data = $(this).serializeArray(); // encode de los elementos del formualrio
+            console.log(form_data);
+            //return;
+            LoadingOverlayShow("#form"); //para invocar el loader
+            $.ajax({
+                url: post_url,
+                type: request_method,
+                data: form_data
+            }).done(function (response) { //se retorna simpre y cundo todo es correcto
+                console.log(response);
+                LoadingOverlayHide("#form"); //para invocar el loader
+                if (response.ok == true) {
+                    alert("Procesos ejecutado correctamente");
+                    window.location = response.toRedirect; //redireccioname desde el mensaje pasdo
+                } else {
+                    alert("Error" + response.msg)
+                }
+            }).fail(function (jqXHR, textStatus, errorThrown) {
+                console.log("Cabezarea" + errorThrown);
+                LoadingOverlayHide("#form"); //para invocar el loader
+                //jqXHR CODIGO HTTP DE LA RESPUESTA FALLIDA TODOS LOS DAOS DE LA SOLICTUD AJAX RELIZDA
+                //TEXTSTATUS // TEXTO QUE DESCRIBE EL TIPO DE ERROR QUE PUEDE SER ADEMAS DE NULL ABORT, TIMEOUT, NO TRANSPOR,
+                //ERROR THOREN SI HAY UIN ERROR EN UN HTTP CONTIENE EL TEXTO DE LA CABCERA DEL ESTADO 404 POR JEMPLO
+
+            });
+        });
+
+</script>
+    }
