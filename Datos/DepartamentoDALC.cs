@@ -26,6 +26,9 @@ namespace Datos
 
             using (var db = new ProyectosContext()) {
 
+                //carg difusa solo me tare lo relacionado a el se desactiva la crag difusa 
+                db.Configuration.LazyLoadingEnabled = false; 
+
                 return db.Departamento.ToList(); //retorna todo lo de la tabla
 
             } 

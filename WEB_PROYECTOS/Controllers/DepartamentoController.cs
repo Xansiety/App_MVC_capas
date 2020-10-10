@@ -68,6 +68,13 @@ namespace WEB_PROYECTOS.Controllers
 
         }
 
+        //listar todos los deparatamentos para la vista de crear
+        public JsonResult getDeptos()
+        {
+            var lstdata = DepartamentoCN.ListarDepartamentos();
+            return Json(new { data = lstdata }, JsonRequestBehavior.AllowGet);
+        }
+
 
         //edicion
         [HttpGet]

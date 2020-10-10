@@ -13,7 +13,7 @@ namespace Negocio
         //instanciar db
         private static EmpleadoDALC obj = new EmpleadoDALC();
 
-        public static List<Empleado> ListarEmpleados()
+        public static List<EmpleadoVM> ListarEmpleados()
         {
             return obj.ListarEmpleados();
 

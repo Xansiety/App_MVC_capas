@@ -105,7 +105,7 @@ namespace WEB_PROYECTOS.Controllers
         {
             try
             {
-                ProyectoCN.Eliminar(id);
+                EmpleadoCN.Eliminar(id);
 
                 return Json(new { ok = true, toRedirect = Url.Action("Index") }, JsonRequestBehavior.AllowGet);
 

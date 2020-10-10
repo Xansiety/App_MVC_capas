@@ -1,0 +1,153 @@
+﻿@model Entidad.Empleado
+
+@{
+    ViewBag.Title = "Crear";
+}
+
+<h2>Crear</h2>
+
+
+@*@using (Html.BeginForm())
+    {*@
+<form action="@Url.Action("Crear","Empleado")" method="POST" name="form" id="form">
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>Empleado</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.Nombres, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Nombres, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Nombres, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Apellidos, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Apellidos, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Apellidos, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Direccion, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Direccion, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Direccion, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Celular, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Celular, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Celular, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">Departamento</label>
+            <div class="col-md-10">
+                @*@Html.EditorFor(model => model.DepartamentoId, new { htmlAttributes = new { @class = "form-control" } })*@
+                <select class="form-control" id="DepartamentoId" name="DepartamentoId">
+                    <option value="">Seleccionar...</option>
+                </select>
+                @Html.ValidationMessageFor(model => model.DepartamentoId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+    @*}*@
+</form>
+
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+
+@section Scripts {
+
+    <script src="//cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+
+    @Scripts.Render("~/bundles/jqueryval")
+    <script >
+    
+        //CONSEGUIR EN FORMA DE LISTA LOS DEPARTAMENTOS
+        getDeptos();
+        function getDeptos() {
+            $.ajax({
+                type: "GET",
+                url: '/Departamento/getDeptos',
+                dataType: 'json',
+                success: function (result) {
+                    $.each(result.data, function (key, item) {
+                        $("#DepartamentoId").append('<option value= ' + item.DepartamentoId + '>' + item.NombreDepartamento + '</option>');
+                    });
+                },
+                error: function (data) {
+                    console.log(data);
+                    alert('Errror inesperado');
+                }
+            });
+        }
+
+//Enviar formulario via ajax
+        $("#form").submit(function (event) {
+            event.preventDefault(); //evitar que la pagina se recargue
+            let deptoId = $("#DepartamentoId").val();
+            if (deptoId == "") {
+                alert("Debes escoger una depto")
+                return;
+            }
+              
+
+            var post_url = $(this).attr("action"); //se consigue la url del formulario
+            var request_method = $(this).attr("method"); //se consigue el metodo
+            var form_data = $(this).serializeArray(); // encode de los elementos del formualrio
+            console.log(form_data);
+            //return;
+            LoadingOverlayShow("#form"); //para invocar el loader
+            $.ajax({
+                url: post_url,
+                type: request_method,
+                data: form_data
+            }).done(function (response) { //se retorna simpre y cundo todo es correcto
+                console.log(response);
+                LoadingOverlayHide("#form"); //para invocar el loader
+                if (response.ok == true) {
+                    alert("Procesos ejecutado correctamente");
+                    window.location = response.toRedirect; //redireccioname desde el mensaje pasdo
+                } else {
+                    alert("Error" + response.msg)
+                }
+            }).fail(function (jqXHR, textStatus, errorThrown) {
+                console.log("Cabezarea" + errorThrown);
+                LoadingOverlayHide("#form"); //para invocar el loader
+                //jqXHR CODIGO HTTP DE LA RESPUESTA FALLIDA TODOS LOS DAOS DE LA SOLICTUD AJAX RELIZDA
+                //TEXTSTATUS // TEXTO QUE DESCRIBE EL TIPO DE ERROR QUE PUEDE SER ADEMAS DE NULL ABORT, TIMEOUT, NO TRANSPOR,
+                //ERROR THOREN SI HAY UIN ERROR EN UN HTTP CONTIENE EL TEXTO DE LA CABCERA DEL ESTADO 404 POR JEMPLO
+
+            });
+        });
+
+
+    </script>
+
+}

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Entidad.Empleado>
+﻿@model IEnumerable<Entidad.EmpleadoVM>
 
 @{
     ViewBag.Title = "Index";
@@ -7,57 +7,126 @@
 <h2>Index</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Nombres)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Apellidos)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Email)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Direccion)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Celular)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.DepartamentoId)
-        </th>
-        <th></th>
-    </tr>
+    @*@Html.ActionLink("Crear nuevo proyecto", "Crear", new { }, new { @class = "btn btn-primary" })*@
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Nombres)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Apellidos)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Email)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Direccion)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Celular)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.DepartamentoId)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.EmpleadoId }) |
-            @Html.ActionLink("Details", "Details", new { id=item.EmpleadoId }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.EmpleadoId })
-        </td>
-    </tr>
-}
+    @*<a class="btn btn-primary" href="/Proyecto/Crear">Crear Nuevo proyecto</a>*@
+    <a class="btn btn-primary" href="@Url.Action("Crear","Empleado")">Crear Nuevo empleado &nbsp;  <i class="glyphicon glyphicon-plus"></i> </a>
+</p>
+<table class="table" id="myTable">
+    <thead>
+        <tr>
+            <th>
+                @*@Html.DisplayNameFor(model => model.Nombres)*@
+                Nombre Completo
+            </th>           
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Direccion)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Celular)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DepartamentoId)
+            </th>
+            <th></th>
+        </tr>
+
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @item.NombreCompleto
+                </td>               
+                <td>
+                    @item.Email
+                </td>
+                <td>
+                    @item.Direccion
+                </td>
+                <td>
+                    @item.Celular
+                </td>
+                <td>
+                   @item.NombreDepartamento
+                </td>
+                <td>
+
+                    <a class="btn btn-primary" title="Editar" href="@Url.Action("Editar","Empleado", new { id = item.EmpleadoId})">
+                        <i class="glyphicon glyphicon-edit"></i>
+                    </a>
+                    | <a class="btn btn-warning" title="Detalle" href="@Url.Action("Detalle","Empleado" ,new { id = item.EmpleadoId})">
+                        <i class="glyphicon glyphicon-list"></i>
+                    </a>
+                    | <a class="btn btn-danger" title="Eliminar" onclick="EliminarProyecto(@item.EmpleadoId)">
+                        <i class="glyphicon glyphicon-trash"></i>
+                    </a>
+                </td>
+            </tr>
+        }
+
+    </tbody>
+
+  
 
 </table>
+
+
+
+@section scripts{
+
+    <script>
+        $(document).ready(function () {
+            $('#myTable').DataTable({
+                "pageLength": 5,
+                lengthMenu: [5, 10, 15, 20, 30, 50, 100]
+            });
+        });
+
+
+        function EliminarProyecto(idE) {
+            //alert(id);
+            $.confirm({
+                title: 'Elimar empleado!',
+                content: 'estas seguro de elimar este empleado?',
+                buttons: {
+                    confirmar: function () {
+                        //$.alert('Confirmed!');
+                        LoadingOverlayShow("#myTable"); //para invocar el loader
+                        $.ajax({
+                            url: "/Empleado/Eliminar",
+                            type: "POST",
+                            data: { id: idE }
+                        }).done(function (response) { //se retorna simpre y cundo todo es correcto
+                            console.log(response);
+                            LoadingOverlayHide("#myTable"); //para invocar el loader
+                            if (response.ok == true) {
+                                alert("Procesos ejecutado correctamente");
+                                window.location = response.toRedirect; //redireccioname desde el mensaje pasdo
+                            } else {
+                                alert("Error" + response.msg)
+                            }
+                        }).fail(function (jqXHR, textStatus, errorThrown) {
+                            console.log("Cabezarea" + errorThrown);
+                            LoadingOverlayHide("#form"); //para invocar el loader
+                            //jqXHR CODIGO HTTP DE LA RESPUESTA FALLIDA TODOS LOS DAOS DE LA SOLICTUD AJAX RELIZDA
+                            //TEXTSTATUS // TEXTO QUE DESCRIBE EL TIPO DE ERROR QUE PUEDE SER ADEMAS DE NULL ABORT, TIMEOUT, NO TRANSPOR,
+                            //ERROR THOREN SI HAY UIN ERROR EN UN HTTP CONTIENE EL TEXTO DE LA CABCERA DEL ESTADO 404 POR JEMPLO
+
+                        });
+
+                    },
+                    cancelar: function () {
+                        // $.alert('Canceled!');
+                    }
+                }
+            });
+        }
+
+    </script>
+
+}
