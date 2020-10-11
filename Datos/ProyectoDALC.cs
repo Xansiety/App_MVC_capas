@@ -72,6 +72,7 @@ namespace Datos
         }
 
 
+        //asignacion de proyectos METODOS
         public bool ExisteAsignacion(int proyectoId, int empleadoId)
         {
             using (var db = new ProyectosContext())
@@ -87,9 +88,7 @@ namespace Datos
             }
 
         }
-
-
-        //asignacion de proyectos
+    
         public void AsignarProyecto(int proyectoId, int empleadoId)
         {
             //SE CONTRUYE ENTIDAD PARA AGREGAR LOS DATOS Y SE ASIGNA LO QUE SE RECIBE

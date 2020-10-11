@@ -1,4 +1,9 @@
-﻿function LoadingOverlayShow(id) {
+﻿
+/**
+ * 
+ * Uso del plugin de loader JS que muestra los loader en forma animada bloqueando el contenido y muetrs la imagen del servidor como carga
+ */
+function LoadingOverlayShow(id) {
     $(id).LoadingOverlay("show", {
         color: "rgba(255,255,255, 0.5)",
         image: "/Content/Loaders/tenor.gif",
@@ -6,12 +11,19 @@
     });
 }
 
-
+/**
+ *
+ * Uso del plugin de loader JS que muestra los loader en forma animada bloqueando el contenido y muetrs la imagen del servidor como carga
+ */
 function LoadingOverlayHide(id) {
     $(id).LoadingOverlay("hide");
 }
 
 
+/**
+ * 
+*Validar las fechas que la fecha final no sea menor a la fecha de inicio del ptryecto
+ */
 function dateValidate(dateIni, dateFin) {
     var _dateIni = new Date(dateIni); //para convertirlos a fecha
     var _dateFin = new Date(dateFin);
@@ -71,7 +83,7 @@ function getDeptos(myCallback) {
 function ListarProyectos(myCallback) {
     $.ajax({
         type: "GET",
-        url: '/Proyecto/Listarproyectos',
+        url: '/Proyecto/Listarproyectos', //Controlador/Metodo 
         dataType: 'json',
         success: function (result) {
             $.each(result.data, function (key, item) {
@@ -95,7 +107,7 @@ function ListarProyectos(myCallback) {
 function ListarEmpleados(myCallback) {
     $.ajax({
         type: "GET",
-        url: '/Empleado/ListarEmpleados',
+        url: '/Empleado/ListarEmpleados', //Controlador/Metodo 
         dataType: 'json',
         success: function (result) {
             $.each(result.data, function (key, item) {

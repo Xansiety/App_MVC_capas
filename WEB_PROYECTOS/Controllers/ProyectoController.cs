@@ -139,16 +139,20 @@ namespace WEB_PROYECTOS.Controllers
 
 
 
+        //viast que permite mostar los combos ya la tabla de asignacion
         public ActionResult AsignarProyecto()
         {
             return View();
         }
 
+
+        //peticion post by ajax, que recibe los parametros de asignacion
         [HttpPost]
         public ActionResult AsignarProyecto(int proyectoId, int empleadoId)
         {
             try
             {
+                //lama al metodo auxiliar que valida que no exista una asignacion previa 
                 if(ProyectoCN.ExisteAsignacion(proyectoId, empleadoId))
                     return Json(new { ok = false, msg = "Ya existe una asignacion previa" }, JsonRequestBehavior.AllowGet);
 
@@ -158,6 +162,7 @@ namespace WEB_PROYECTOS.Controllers
             }
             catch (Exception ex)
             {
+                //devuelve todas las expciones en caso de ocurri un error duran la insercion
                 return Json(new { ok = false, msg = "Ocurrio un error inesperado" }, JsonRequestBehavior.AllowGet);
                 // throw;
             }
