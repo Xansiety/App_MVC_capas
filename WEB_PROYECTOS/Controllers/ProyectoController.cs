@@ -12,7 +12,7 @@ namespace WEB_PROYECTOS.Controllers
     [Authorize(Roles = "Admin")]
     public class ProyectoController : Controller
     {
-        
+
         // GET: Proyecto
         public ActionResult Index()
         {
@@ -122,12 +122,47 @@ namespace WEB_PROYECTOS.Controllers
         }
 
 
+        public JsonResult Listarproyectos() {
+            try
+            {
+                var lstdata = ProyectoCN.ListarProyectos();
+                return Json(new { ok = true, data = lstdata }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+
+                //throw;
+                return Json(new { ok = false, msg = "Ocurrio un error inesperado" }, JsonRequestBehavior.AllowGet);
+            }
+
+        }
 
 
 
+        public ActionResult AsignarProyecto()
+        {
+            return View();
+        }
 
+        [HttpPost]
+        public ActionResult AsignarProyecto(int proyectoId, int empleadoId)
+        {
+            try
+            {
+                if(ProyectoCN.ExisteAsignacion(proyectoId, empleadoId))
+                    return Json(new { ok = false, msg = "Ya existe una asignacion previa" }, JsonRequestBehavior.AllowGet);
 
-
+                //insert la relacion
+                ProyectoCN.AsignarProyecto(proyectoId, empleadoId);
+                return Json(new { ok = true, toRedirect = Url.Action("AsignarProyecto") }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { ok = false, msg = "Ocurrio un error inesperado" }, JsonRequestBehavior.AllowGet);
+                // throw;
+            }
+           
+        }
 
 
     }

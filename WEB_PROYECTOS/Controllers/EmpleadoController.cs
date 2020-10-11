@@ -20,6 +20,23 @@ namespace WEB_PROYECTOS.Controllers
         }
 
 
+        public JsonResult ListarEmpleados()
+        {
+            try
+            {
+                var lstdata = EmpleadoCN.ListarEmpleados();
+                return Json(new { ok = true, data = lstdata }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+
+                //throw;
+                return Json(new { ok = false, msg = "Ocurrio un error inesperado" }, JsonRequestBehavior.AllowGet);
+            }
+
+        }
+
+
         public ActionResult Crear()
         {
             return View();

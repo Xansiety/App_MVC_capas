@@ -34,7 +34,9 @@ function getDeptos(myCallback) {
                 $("#DepartamentoId").append('<option value= ' + item.DepartamentoId + '>' + item.NombreDepartamento + '</option>');
             });
 
-            return myCallback(result.data);
+           if (myCallback != undefined) {
+                return myCallback(result.data);
+            } 
         },
         error: function (data) {
             console.log(data);
@@ -60,5 +62,56 @@ function getDeptos(myCallback) {
 //        }
 //    });
 //}
+
+
+/**
+ * 
+ * Funciones para enlistar los datos en la asignacion del proyecto
+ */
+function ListarProyectos(myCallback) {
+    $.ajax({
+        type: "GET",
+        url: '/Proyecto/Listarproyectos',
+        dataType: 'json',
+        success: function (result) {
+            $.each(result.data, function (key, item) {
+                $("#ProyectoId").append('<option value= ' + item.ProyectoId + '>' + item.NombreProyecto + '</option>');
+            });
+            //para evitar errores en l llamada de los callback que no se necesitan
+            if (myCallback != undefined) {
+                return myCallback(result.data);
+            } 
+            
+        },
+        error: function (data) {
+            console.log(data);
+            alert('Errror inesperado');
+        }
+    });
+}
+
+
+
+function ListarEmpleados(myCallback) {
+    $.ajax({
+        type: "GET",
+        url: '/Empleado/ListarEmpleados',
+        dataType: 'json',
+        success: function (result) {
+            $.each(result.data, function (key, item) {
+                $("#EmpleadoId").append('<option value= ' + item.EmpleadoId + '>' + item.Apellidos + ' ' + item.Nombres + '</option>');
+            });
+            //para evitar errores en l llamada de los callback que no se necesitan
+            if (myCallback != undefined) {
+                return myCallback(result.data);
+            }
+
+        },
+        error: function (data) {
+            console.log(data);
+            alert('Errror inesperado');
+        }
+    });
+}
 
 

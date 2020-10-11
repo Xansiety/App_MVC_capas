@@ -21,17 +21,21 @@ namespace Datos
         }
 
 
-        public List<Proyecto> ListarProyectos() 
+        public List<Proyecto> ListarProyectos()
         {
 
-            using (var db = new ProyectosContext()) {
-
+            using (var db = new ProyectosContext())
+            {
+                //carg difusa solo me tare lo relacionado a el se desactiva la crag difusa 
+                db.Configuration.LazyLoadingEnabled = false;
                 return db.Proyecto.ToList();
 
             }
         }
 
-        public Proyecto ObtenerProyecto(int id) {
+
+        public Proyecto ObtenerProyecto(int id)
+        {
 
             using (var db = new ProyectosContext())
             {
@@ -51,17 +55,54 @@ namespace Datos
                 p.NombreProyecto = proyecto.NombreProyecto;
                 p.FechaInicio = proyecto.FechaInicio;
                 p.FechaFin = proyecto.FechaFin;
-                
+
                 db.SaveChanges();
             }
         } //fin
 
 
-        public void Eliminar(int id) {
+        public void Eliminar(int id)
+        {
             using (var db = new ProyectosContext())
             {
                 var p = db.Proyecto.Find(id);
                 db.Proyecto.Remove(p);
+                db.SaveChanges();
+            }
+        }
+
+
+        public bool ExisteAsignacion(int proyectoId, int empleadoId)
+        {
+            using (var db = new ProyectosContext())
+            {
+                ////DEVUELVE EL PRIMERO
+                ////var exist = db.ProyectoEmpleado.Where(p => p.ProyectoId == proyectoId && p.EmpleadoId == empleadoId)
+                ////                                .FirstOrDefault();
+                /// ////any devuelve verdadero o falso
+                var exist = db.ProyectoEmpleado
+                           .Any(p => p.ProyectoId == proyectoId && p.EmpleadoId == empleadoId);
+
+                return exist;
+            }
+
+        }
+
+
+        //asignacion de proyectos
+        public void AsignarProyecto(int proyectoId, int empleadoId)
+        {
+            //SE CONTRUYE ENTIDAD PARA AGREGAR LOS DATOS Y SE ASIGNA LO QUE SE RECIBE
+            var proyectoEmp = new ProyectoEmpleado
+            {
+                ProyectoId = proyectoId,
+                EmpleadoId = empleadoId,
+                FechaAlta = DateTime.Now
+            };
+
+            using (var db = new ProyectosContext())
+            {                
+                db.ProyectoEmpleado.Add(proyectoEmp);
                 db.SaveChanges();
             }
         }

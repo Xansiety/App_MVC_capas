@@ -1,0 +1,112 @@
+﻿
+@{
+    ViewBag.Title = "AsignarProyecto";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Asignar Proyecto a empleado</h2>
+<hr />
+
+<div class="form-horizontal" id="DivAsignar">
+    <div class="form-group">
+        <label class="control-label col-md-2"> Proyecto</label>
+        <div class="col-md-4">
+            <select class="form-control" id="ProyectoId" name="ProyectoId">
+                <option value="">Seleccione ...</option>
+            </select>
+        </div>
+
+        <label class="control-label col-md-1"> Empleado</label>
+        <div class="col-md-4">
+            <select class="form-control" id="EmpleadoId" name="EmpleadoId">
+                <option value="">Seleccione ...</option>
+            </select>
+        </div>
+    </div>
+    <!--BOTONES-->
+    <div class="form-group">
+
+    </div>
+
+    <div class="form-group">
+        <div class="col-lg-offset-4 col-md-4">
+            <br />
+            <button type="button" class="btn btn-primary btn-block" onclick="AsignarProyecto()">
+                <i class="glyphicon glyphicon-hand-up"></i>&nbsp; Asignar
+            </button>
+        </div>
+    </div>
+
+    <hr />
+
+    <div class="form-group">
+        <div class="col-lg-offset-2 col-md-6">
+            <table class="table table-bordered table-condensed table-striped">
+                <thead>
+                    <tr>
+                        <th>Proyecto</th>
+                        <th>Nombre Empleado</th>
+                        <th>Fecha Asigncion</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Hola</td>
+                        <td>Mundo</td>
+                        <td>Mundo</td>
+                    </tr>
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+
+</div>
+
+
+
+@section Scripts{
+    <script>
+        ListarProyectos(); //se invoca el metodo desde JS
+        ListarEmpleados();
+
+        function AsignarProyecto() {
+
+            //validar
+            var ProyectoId = $("#ProyectoId").val();
+            var EmpleadoId = $("#EmpleadoId").val();
+
+            if (ProyectoId == "" || EmpleadoId == "") {
+                alert("Debe seleccionar un empledo o un proyecto");
+                return;
+            }
+
+            LoadingOverlayShow("#DivAsignar"); //para invocar el loader
+            $.ajax({
+                url: "/proyecto/AsignarProyecto",
+                type: "POST",
+                data: { proyectoId: ProyectoId, empleadoId: EmpleadoId }
+            }).done(function (response) { //se retorna simpre y cundo todo es correcto
+                console.log(response);
+                LoadingOverlayHide("#DivAsignar"); //para invocar el loader
+                if (response.ok == true) {
+                    alert("Asignacion ejecutado correctamente");
+                    window.location = response.toRedirect; //redireccioname desde el mensaje pasdo
+                } else {
+                    alert("Error: " + response.msg)
+                }
+            }).fail(function (jqXHR, textStatus, errorThrown) {
+                console.log("Cabezarea" + errorThrown);
+                LoadingOverlayHide("#DivAsignar");
+            });
+
+        }
+    </script>
+}
+
+
+
+
+
+
+

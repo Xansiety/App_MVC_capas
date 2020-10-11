@@ -42,5 +42,20 @@ namespace Negocio
             obj.Eliminar(id);
         }
 
+
+        //metodos para la asignacion
+        public static bool ExisteAsignacion(int proyectoId, int empleadoId)
+        {
+            return obj.ExisteAsignacion(proyectoId, empleadoId);
+        }
+        
+        public static void AsignarProyecto(int proyectoId, int empleadoId)
+        {
+            obj.AsignarProyecto(proyectoId,empleadoId);
+        }
+
+
+
+
     }
 }
