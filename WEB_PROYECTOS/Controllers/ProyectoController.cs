@@ -122,7 +122,8 @@ namespace WEB_PROYECTOS.Controllers
         }
 
 
-        public JsonResult Listarproyectos() {
+        public JsonResult Listarproyectos()
+        {
             try
             {
                 var lstdata = ProyectoCN.ListarProyectos();
@@ -142,7 +143,8 @@ namespace WEB_PROYECTOS.Controllers
         //viast que permite mostar los combos ya la tabla de asignacion
         public ActionResult AsignarProyecto()
         {
-            return View();
+                    
+            return View(ProyectoCN.ListarAsignaciones());
         }
 
 
@@ -153,8 +155,11 @@ namespace WEB_PROYECTOS.Controllers
             try
             {
                 //lama al metodo auxiliar que valida que no exista una asignacion previa 
-                if(ProyectoCN.ExisteAsignacion(proyectoId, empleadoId))
+                if (ProyectoCN.ExisteAsignacion(proyectoId, empleadoId))
                     return Json(new { ok = false, msg = "Ya existe una asignacion previa" }, JsonRequestBehavior.AllowGet);
+
+                if(!ProyectoCN.ProyectoActivo(proyectoId))
+                    return Json(new { ok = false, msg = "El proyecto ya no se encuentra activo" }, JsonRequestBehavior.AllowGet);
 
                 //insert la relacion
                 ProyectoCN.AsignarProyecto(proyectoId, empleadoId);
@@ -166,8 +171,29 @@ namespace WEB_PROYECTOS.Controllers
                 return Json(new { ok = false, msg = "Ocurrio un error inesperado" }, JsonRequestBehavior.AllowGet);
                 // throw;
             }
-           
+
+        }//fin del metodo
+
+
+        [HttpPost]
+        public ActionResult EliminarAsignacion(int proyectoId, int empleadoId)
+        {
+            try
+            {
+                ProyectoCN.EliminarAsignacion(proyectoId, empleadoId);
+
+                return Json(new { ok = true, toRedirect = Url.Action("AsignarProyecto") }, JsonRequestBehavior.AllowGet);
+
+            }
+            catch (Exception ex)
+            {
+
+                //throw;
+                return Json(new { ok = false, msg = "Ocurrio un error inesperado" }, JsonRequestBehavior.AllowGet);
+
+            }
         }
+
 
 
     }

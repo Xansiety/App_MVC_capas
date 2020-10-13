@@ -1,4 +1,5 @@
-﻿
+﻿@model IEnumerable<Entidad.ProyectoEmpleadoViewModel>
+
 @{
     ViewBag.Title = "AsignarProyecto";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -47,62 +48,129 @@
                         <th>Proyecto</th>
                         <th>Nombre Empleado</th>
                         <th>Fecha Asigncion</th>
+                        <th> </th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td>Hola</td>
-                        <td>Mundo</td>
-                        <td>Mundo</td>
-                    </tr>
-                </tbody>
+                        @foreach (var item in Model)
+                        {
+                        <tr>
+                            <td>
+                                @item.NombreProyecto
+                            </td>
+                            <td>
+                                @item.NombreCompleto
+                            </td>
+                            <td class="text-center">
+                                @item.FechaAlta.ToShortDateString()
+                            </td>
+                            <td class="text-center">
+                                <a href="javascript:;" class="btn btn-danger" title="Eliminar" onclick="EliminarAsignacion(@item.ProyectoId,@item.EmpleadoId)">
+                                    <i class="glyphicon glyphicon-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
 
-            </table>
+                </table>
+            </div>
         </div>
+
     </div>
 
-</div>
 
 
+    @section Scripts{
+        <script>
+            ListarProyectos(); //se invoca el metodo desde JS
+            ListarEmpleados();
 
-@section Scripts{
-    <script>
-        ListarProyectos(); //se invoca el metodo desde JS
-        ListarEmpleados();
+            function AsignarProyecto() {
+                //validar
+                var ProyectoId = $("#ProyectoId").val();
+                var EmpleadoId = $("#EmpleadoId").val();
 
-        function AsignarProyecto() {
+                if (ProyectoId == "" || EmpleadoId == "") {
+                    alert("Debe seleccionar un empledo o un proyecto");
+                    return;
+                }
 
-            //validar
-            var ProyectoId = $("#ProyectoId").val();
-            var EmpleadoId = $("#EmpleadoId").val();
+                $.confirm({
+                    title: 'Agregar asignacion proyecto!',
+                    content: 'estas seguro de asignar este proyecto?',
+                    buttons: {
+                        confirmar: function () {
 
-            if (ProyectoId == "" || EmpleadoId == "") {
-                alert("Debe seleccionar un empledo o un proyecto");
-                return;
+                            LoadingOverlayShow("#DivAsignar"); //para invocar el loader
+                            $.ajax({
+                                url: "/proyecto/AsignarProyecto",
+                                type: "POST",
+                                data: { proyectoId: ProyectoId, empleadoId: EmpleadoId }
+                            }).done(function (response) { //se retorna simpre y cundo todo es correcto
+                                console.log(response);
+                                LoadingOverlayHide("#DivAsignar"); //para invocar el loader
+                                if (response.ok == true) {
+                                    alert("Asignacion ejecutado correctamente");
+                                    window.location = response.toRedirect; //redireccioname desde el mensaje pasdo
+                                } else {
+                                    alert("Error: " + response.msg)
+                                }
+                            }).fail(function (jqXHR, textStatus, errorThrown) {
+                                console.log("Cabezarea" + errorThrown);
+                                LoadingOverlayHide("#DivAsignar");
+                            });
+
+                        },
+                        cancelar: function () {
+                            // $.alert('Canceled!');
+                        }
+                    }
+                });
             }
 
-            LoadingOverlayShow("#DivAsignar"); //para invocar el loader
-            $.ajax({
-                url: "/proyecto/AsignarProyecto",
-                type: "POST",
-                data: { proyectoId: ProyectoId, empleadoId: EmpleadoId }
-            }).done(function (response) { //se retorna simpre y cundo todo es correcto
-                console.log(response);
-                LoadingOverlayHide("#DivAsignar"); //para invocar el loader
-                if (response.ok == true) {
-                    alert("Asignacion ejecutado correctamente");
-                    window.location = response.toRedirect; //redireccioname desde el mensaje pasdo
-                } else {
-                    alert("Error: " + response.msg)
-                }
-            }).fail(function (jqXHR, textStatus, errorThrown) {
-                console.log("Cabezarea" + errorThrown);
-                LoadingOverlayHide("#DivAsignar");
-            });
 
-        }
-    </script>
-}
+           
+
+            function EliminarAsignacion(ProyectoId, EmpleadoId) {
+
+                $.confirm({
+                    title: 'Elimanar asignacion!',
+                    content: 'estas seguro de eliminar esta asignacion?',
+                    buttons: {
+                        confirmar: function () {
+
+                            LoadingOverlayShow("#DivAsignar"); //para invocar el loader
+                            $.ajax({
+                                url: "/proyecto/EliminarAsignacion",
+                                type: "POST",
+                                data: { proyectoId: ProyectoId, empleadoId: EmpleadoId }
+                            }).done(function (response) { //se retorna simpre y cundo todo es correcto
+                                console.log(response);
+                                LoadingOverlayHide("#DivAsignar"); //para invocar el loader
+                                if (response.ok == true) {
+                                    alert("Asignacion eliminada correctamente");
+                                    window.location = response.toRedirect; //redireccioname desde el mensaje pasdo
+                                } else {
+                                    alert("Error: " + response.msg)
+                                }
+                            }).fail(function (jqXHR, textStatus, errorThrown) {
+                                console.log("Cabezarea" + errorThrown);
+                                LoadingOverlayHide("#DivAsignar");
+                            });
+
+                        },
+                        cancelar: function () {
+                            // $.alert('Canceled!');
+                        }
+                    }
+                });
+                               
+            }
+          
+        </script>
+    }
 
 
 

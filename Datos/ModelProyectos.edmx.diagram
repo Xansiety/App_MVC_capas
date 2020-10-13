@@ -8,8 +8,8 @@
         <EntityTypeShape EntityType="UdemyCapasModel.Departamento" Width="1.5" PointX="4.25" PointY="3.625" IsExpanded="true" />
         <EntityTypeShape EntityType="UdemyCapasModel.Proyecto" Width="1.5" PointX="1.5" PointY="0.625" IsExpanded="true" />
         <EntityTypeShape EntityType="UdemyCapasModel.Empleado" Width="1.5" PointX="6.5" PointY="3" />
-        <EntityTypeShape EntityType="UdemyCapasModel.ProyectoEmpleado" Width="1.5" PointX="8.75" PointY="2.25" />
         <AssociationConnector Association="UdemyCapasModel.FK_Empleado_Departamento" />
+        <EntityTypeShape EntityType="UdemyCapasModel.ProyectoEmpleado" Width="1.5" PointX="8.75" PointY="2.25" />
         <AssociationConnector Association="UdemyCapasModel.FK_ProyectoEmpleado_Empleado" />
         <AssociationConnector Association="UdemyCapasModel.FK_ProyectoEmpleado_Proyecto" />
         </Diagram>

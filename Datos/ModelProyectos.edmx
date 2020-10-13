@@ -122,11 +122,11 @@
           <EntitySet Name="Departamento" EntityType="Self.Departamento" />
           <EntitySet Name="Proyecto" EntityType="Self.Proyecto" />
           <EntitySet Name="Empleado" EntityType="UdemyCapasModel.Empleado" />
-          <EntitySet Name="ProyectoEmpleado" EntityType="UdemyCapasModel.ProyectoEmpleado" />
           <AssociationSet Name="FK_Empleado_Departamento" Association="UdemyCapasModel.FK_Empleado_Departamento">
             <End Role="Departamento" EntitySet="Departamento" />
             <End Role="Empleado" EntitySet="Empleado" />
           </AssociationSet>
+          <EntitySet Name="ProyectoEmpleado" EntityType="UdemyCapasModel.ProyectoEmpleado" />
           <AssociationSet Name="FK_ProyectoEmpleado_Empleado" Association="UdemyCapasModel.FK_ProyectoEmpleado_Empleado">
             <End Role="Empleado" EntitySet="Empleado" />
             <End Role="ProyectoEmpleado" EntitySet="ProyectoEmpleado" />
@@ -150,17 +150,6 @@
           <NavigationProperty Name="Departamento" Relationship="UdemyCapasModel.FK_Empleado_Departamento" FromRole="Empleado" ToRole="Departamento" />
           <NavigationProperty Name="ProyectoEmpleado" Relationship="UdemyCapasModel.FK_ProyectoEmpleado_Empleado" FromRole="Empleado" ToRole="ProyectoEmpleado" />
         </EntityType>
-        <EntityType Name="ProyectoEmpleado">
-          <Key>
-            <PropertyRef Name="ProyectoId" />
-            <PropertyRef Name="EmpleadoId" />
-          </Key>
-          <Property Name="ProyectoId" Type="Int32" Nullable="false" />
-          <Property Name="EmpleadoId" Type="Int32" Nullable="false" />
-          <Property Name="FechaAlta" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="Empleado" Relationship="UdemyCapasModel.FK_ProyectoEmpleado_Empleado" FromRole="ProyectoEmpleado" ToRole="Empleado" />
-          <NavigationProperty Name="Proyecto" Relationship="UdemyCapasModel.FK_ProyectoEmpleado_Proyecto" FromRole="ProyectoEmpleado" ToRole="Proyecto" />
-        </EntityType>
         <Association Name="FK_Empleado_Departamento">
           <End Type="UdemyCapasModel.Departamento" Role="Departamento" Multiplicity="1" />
           <End Type="UdemyCapasModel.Empleado" Role="Empleado" Multiplicity="*" />
@@ -173,6 +162,17 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="ProyectoEmpleado">
+          <Key>
+            <PropertyRef Name="ProyectoId" />
+            <PropertyRef Name="EmpleadoId" />
+          </Key>
+          <Property Name="ProyectoId" Type="Int32" Nullable="false" />
+          <Property Name="EmpleadoId" Type="Int32" Nullable="false" />
+          <Property Name="FechaAlta" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Empleado" Relationship="UdemyCapasModel.FK_ProyectoEmpleado_Empleado" FromRole="ProyectoEmpleado" ToRole="Empleado" />
+          <NavigationProperty Name="Proyecto" Relationship="UdemyCapasModel.FK_ProyectoEmpleado_Proyecto" FromRole="ProyectoEmpleado" ToRole="Proyecto" />
+        </EntityType>
         <Association Name="FK_ProyectoEmpleado_Empleado">
           <End Type="UdemyCapasModel.Empleado" Role="Empleado" Multiplicity="1" />
           <End Type="UdemyCapasModel.ProyectoEmpleado" Role="ProyectoEmpleado" Multiplicity="*" />
@@ -197,7 +197,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-      </Schema>
+        </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>

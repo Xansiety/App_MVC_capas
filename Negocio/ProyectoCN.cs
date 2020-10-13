@@ -48,13 +48,30 @@ namespace Negocio
         {
             return obj.ExisteAsignacion(proyectoId, empleadoId);
         }
-        
-        public static void AsignarProyecto(int proyectoId, int empleadoId)
+
+        public static bool ProyectoActivo(int proyectoId)
         {
-            obj.AsignarProyecto(proyectoId,empleadoId);
+            return obj.ProyectoActivo(proyectoId);
         }
 
 
+        public static void AsignarProyecto(int proyectoId, int empleadoId)
+        {
+            obj.AsignarProyecto(proyectoId, empleadoId);
+        }
+
+
+        public static List<ProyectoEmpleadoViewModel> ListarAsignaciones()
+        {
+
+            return obj.ListarAsignaciones();
+        }
+
+
+        public static void EliminarAsignacion(int proyectoId, int empleadoId)
+        {
+            obj.EliminarAsignacion(proyectoId, empleadoId);
+        }
 
 
     }
