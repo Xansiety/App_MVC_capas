@@ -1,8 +1,7 @@
 ﻿@model IEnumerable<Entidad.Proyecto>
+@*@model IEnumerable<Entidad.SpListarProyectos_Result> //USO DE ALAMACENAMIENTO PROCESADO*@
 
-@{
-    ViewBag.Title = "Index";
-}
+@{ ViewBag.Title = "Index"; }
 
 @section estilos{
     <link rel="stylesheet" href="//cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css" />
@@ -36,42 +35,41 @@
     <tbody>
         @foreach (var item in Model)
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.NombreProyecto)
-                </td>
-                <td>
-                    @item.FechaInicio.ToShortDateString()
-                    @*@Html.DisplayFor(modelItem => item.FechaInicio.ToShortDateString())*@
-                </td>
-                <td>
-                    @item.FechaFin.ToShortDateString()
-                    @*@Html.DisplayFor(modelItem => item.FechaFin.ToShortDateString())*@
-                </td>
-                <td>
-                    <a class="btn btn-primary" title="Editar" href="@Url.Action("Editar","Proyecto", new { id = item.ProyectoId})">
-                        <i class="glyphicon glyphicon-edit"></i>
-                    </a>
-                    | <a class="btn btn-warning" title="Detalle" href="@Url.Action("Detalle","Proyecto" ,new { id = item.ProyectoId})">
-                        <i class="glyphicon glyphicon-list"></i>
-                    </a>
-                    | <a class="btn btn-danger" title="Eliminar" onclick="EliminarProyecto(@item.ProyectoId)">
-                        <i class="glyphicon glyphicon-trash"></i>
-                    </a>
+<tr>
+    <td>
+        @Html.DisplayFor(modelItem => item.NombreProyecto)
+    </td>
+    <td>
+        @item.FechaInicio.ToShortDateString()
+        @*@Html.DisplayFor(modelItem => item.FechaInicio.ToShortDateString())*@
+    </td>
+    <td>
+        @item.FechaFin.ToShortDateString()
+        @*@Html.DisplayFor(modelItem => item.FechaFin.ToShortDateString())*@
+    </td>
+    <td>
+        <a class="btn btn-primary" title="Editar" href="@Url.Action("Editar","Proyecto", new { id = item.ProyectoId})">
+            <i class="glyphicon glyphicon-edit"></i>
+        </a>
+        | <a class="btn btn-warning" title="Detalle" href="@Url.Action("Detalle","Proyecto" ,new { id = item.ProyectoId})">
+            <i class="glyphicon glyphicon-list"></i>
+        </a>
+        | <a class="btn btn-danger" title="Eliminar" onclick="EliminarProyecto(@item.ProyectoId)">
+            <i class="glyphicon glyphicon-trash"></i>
+        </a>
 
 
-                </td>
-            </tr>
-        }
+    </td>
+</tr>}
     </tbody>
 </table>
 @section scripts{
-  
+
     <script>
         $(document).ready(function () {
             $('#myTable').DataTable({
                 "pageLength": 5,
-                lengthMenu: [5,10,15,20,30,50,100]
+                lengthMenu: [5, 10, 15, 20, 30, 50, 100]
             });
         });
 
@@ -109,12 +107,12 @@
 
                     },
                     cancelar: function () {
-                       // $.alert('Canceled!');
-                    }                    
+                        // $.alert('Canceled!');
+                    }
                 }
             });
         }
-       
+
     </script>
 
 }

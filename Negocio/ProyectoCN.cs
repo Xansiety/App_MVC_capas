@@ -13,6 +13,9 @@ namespace Negocio
         //instanciar db
         private static ProyectoDALC obj = new ProyectoDALC();
 
+        //public static List<Proyecto> ListarProyectos()
+        //LISTAR DESDE STRORE PROCEDURE
+        //public static List<SpListarProyectos_Result> ListarProyectos()
         public static List<Proyecto> ListarProyectos()
         {
             return obj.ListarProyectos();

@@ -12,6 +12,8 @@ namespace Entidad
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Core.Objects;
+    using System.Linq;
     
     public partial class ProyectosContext : DbContext
     {
@@ -29,5 +31,10 @@ namespace Entidad
         public virtual DbSet<Proyecto> Proyecto { get; set; }
         public virtual DbSet<Empleado> Empleado { get; set; }
         public virtual DbSet<ProyectoEmpleado> ProyectoEmpleado { get; set; }
+    
+        public virtual ObjectResult<SpListarProyectos_Result> SpListarProyectos()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SpListarProyectos_Result>("SpListarProyectos");
+        }
     }
 }

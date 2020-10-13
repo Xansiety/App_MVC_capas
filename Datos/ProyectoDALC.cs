@@ -1,6 +1,7 @@
 ﻿using Entidad;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Deployment.Internal;
 using System.Linq;
 using System.Text;
@@ -21,9 +22,10 @@ namespace Datos
         }
 
 
+        //devuelve el la nueva clase es decir la que se crea cuando se agrega el Store procedure
+        //public List<SpListarProyectos_Result> ListarProyectos()
         public List<Proyecto> ListarProyectos()
         {
-
             using (var db = new ProyectosContext())
             {
                 //carg difusa solo me tare lo relacionado a el se desactiva la crag difusa 
@@ -32,6 +34,16 @@ namespace Datos
                 //.DATE solo compra la fech sin conatar la hora
                 //var ToDay = DateTime.Now.Date;
                 //return db.Proyecto.Where(p => p.FechaFin > ToDay).ToList();
+
+                //USO DE ALMACENAMIENTOS PROCESADO DESDE SQL
+                //1ra froma
+                //DEBEMOS ABRIR EL EDM Y AGREGAR El procediemitno desde la actualizaxion en la BD
+                //en uestras entidades sobre ModelproyectosTT dar click izquierdo y ejecutar herramienta personalizada
+                //se agrega la clase
+                //:: IMPLEMENTACION ::
+                //var dataForma1 = db.SpListarProyectos().ToList();
+                //return dataForma1;    
+
             }
         }
 
@@ -39,10 +51,19 @@ namespace Datos
         public Proyecto ObtenerProyecto(int id)
         {
 
+            string StoreProcedure = "exec SpObtenerListaProyectos @ProyectoId";
             using (var db = new ProyectosContext())
             {
 
-                return db.Proyecto.Find(id); //buscar proyecto por id
+                //return db.Proyecto.Find(id); //buscar proyecto por id
+
+
+                //uso de StoreProcedure de segunda froma sin importar desde el modelo
+                var MiProyecto = db.Database.SqlQuery<Proyecto>(StoreProcedure,
+                    new SqlParameter("@ProyectoId", id)).FirstOrDefault();
+
+                return MiProyecto;
+
 
             }
 
